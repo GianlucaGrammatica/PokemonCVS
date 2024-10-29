@@ -7,7 +7,9 @@
     b) leggere con un programma C il file csv caricando i dati in array VP di struct POKE lungo 100
     c) per verifica, stampare il contenuto di tutto l'array VP
     d) scansionare il vettore VP di struct e trovare il pokemon con il nome più lungo
+*/
 
+/*
     CVS:
         Numero ,Nome ,Tipo
         63,Abra,Psico
@@ -21,6 +23,7 @@
         25,Pikachu,Elettro
  */
 
+
 int main(void) {
 
     struct Poke {
@@ -31,13 +34,12 @@ int main(void) {
 
     struct Poke PV[100];
 
-    FILE *FilePoint;
+    FILE *FilePoint = fopen("../pokemon.csv", "r");
     char Buffer[1000];
 
-    FilePoint = fopen("pokemon.csv", "r");
     if (FilePoint == NULL) {
         printf("Errore nell'apertura del file");
-        return;
+        return 1;
     }
 
     fgets(Buffer, 100, FilePoint);
@@ -49,6 +51,30 @@ int main(void) {
     }
 
     fclose(FilePoint);
+
+    i = 0;
+    while (i < 100 && PV[i].Number != 0) {
+        printf("Pokemon #%d:\n", i + 1);
+        printf("Numero: %d\n", PV[i].Number);
+        printf("Nome: %s\n", PV[i].Name);
+        printf("Tipo: %s\n", PV[i].Type);
+        i++;
+    }
+
+    int MaxLength = 0, MaxIndex = 0;
+    char LongestName[50];
+    i = 0;
+
+    do {
+        if (strlen(PV[i].Name) > MaxLength) {
+            MaxLength = strlen(PV[i].Name);
+            MaxIndex = i;
+            strcpy(LongestName, PV[i].Name);
+        }
+        i++;
+    }while(i < 100 && PV[i].Number != 0);
+
+    printf("\nIl Pokemon con il nome piu' lungo e': %s", PV[MaxIndex].Name);
 
     return 0;
 }
